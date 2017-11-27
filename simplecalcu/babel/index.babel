@@ -1,0 +1,53 @@
+const EntryList = (props) => {
+  return <div className="row">
+    <div className="large-12 columns">
+      <ul>{props.items.map((itemText, index) => {
+          return <li key={index + itemText}>{itemText}</li>;
+        })}</ul>
+    </div>
+  </div>;
+};
+
+const CalculateApp = React.createClass({
+  getInitialState() {
+    return {items: [], text: ''};
+  },
+  
+  onChange(e) {
+    this.setState({text: e.target.value});
+  },
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const value = this.state.text;
+    const entry = value + ' = ' + eval(value);
+    const nextItems = this.state.items;
+    const nextText = '';
+    this.state.items.unshift(entry);
+    this.setState({items: nextItems, text: nextText});
+  },
+  
+  render() {
+    return (
+      <div className="row">
+        <div className="large-12 columns">
+        <h3>Calculate</h3>
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <div className="input-group">
+            <input className="input-group-field" type="text" onChange={this.onChange.bind(this)} value={this.state.text} />
+            <div className="input-group-button">
+              <button className="button" type="submit">Submit</button>
+            </div>
+          </div>
+        </form>
+        <EntryList items={this.state.items} />
+      </div>
+      </div>
+    );
+  }
+});
+
+ReactDOM.render(
+  <CalculateApp />,
+  document.getElementById('app')
+);
